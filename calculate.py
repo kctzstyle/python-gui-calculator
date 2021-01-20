@@ -1,84 +1,49 @@
 
-import operator
-
-from functools import reduce
-from queue import SimpleQueue
-
-
 class Calculator:
 
     def __init__(self):
-        self.__q = SimpleQueue()
-        self.__op = {
-            '+': self.add,
-            '-': self.sub,
-            '*': self.mul,
-            '/': self.div,
-            '%': self.mod
-        }
+        self.__values = []
 
     @property
     def values(self):
-        return self.__q
+        print(self.__values)
+        length = len(self.__values)
+        if length > 3:
+            x, op1, y, op2 = self.__values
+            result = self.calculate[op1](float(x), float(y))
+            self.reset()
+            if result.is_integer():
+                result = int(result)
+            self.values = result
+            self.values = op2
+        elif length == 3:
+            x, op, y = self.__values
+            result = self.calculate[op](float(x), float(y))
+            self.reset()
+            if result.is_integer():
+                result = int(result)
+            self.values = result
+        return self.__values[0]
 
     @values.setter
     def values(self, v):
-        self.__q.put(v)
+        self.__values.append(v)
+
+    @property
+    def calculate(self):
+        return {
+            '+': lambda x, y: x + y,
+            '-': lambda x, y: x - y,
+            '*': lambda x, y: x * y,
+            '/': lambda x, y: x / y,
+            '%': lambda x, y: x % y
+        }
 
     def reset(self):
-        self.__q = SimpleQueue()
-
-    def eq(self):
-        result = 0
-        length = self.values.qsize()
-        print(self.values)
-
-        if length >= 3:
-            v1 = float(self.values.get())
-            op = self.values.get()
-            v2 = float(self.values.get())
-            print(v1, op, v2)
-            cal = self.__op.get(op)
-            result = cal((v1, v2))
-        elif 0 < length <= 2:
-            v = self.values.get()
-            op = self.values.get()
-            print(v, op)
-            self.values = v
-            self.values = op
-            return v
-        else:
-            result = 0
-        print(result)
-        return result
-
-    def add(self, values):
-        v = sum(values)
-        self.values = v
-        return v
-
-    def sub(self, values):
-        v = reduce(operator.sub, values)
-        self.values = v
-        return v
-
-    def mul(self, values):
-        v = reduce(operator.mul, values)
-        self.values = v
-        return v
-
-    def div(self, values):
-        v = reduce(operator.truediv, values)
-        self.values = v
-        return v
-
-    def mod(self, values):
-        v = reduce(operator.mod, values)
-        self.values = v
-        return v
+        self.__values.clear()
 
     def __add__(self, other):
         self.values = other
 
     def __str__(self):
-        return str(self.eq())
+        return str(self.values)

@@ -12,6 +12,8 @@ class Application(tk.Frame):
         super(Application, self).__init__(master)
         self.master = master
         self.cal = Calculator()
+        self.is_input = False
+
         self.pack()
         self.create_widgets()
         self.grid_widgets()
@@ -48,8 +50,8 @@ class Application(tk.Frame):
         self.btnEq = tk.Button(self)
 
     def grid_widgets(self):
-        self.txtValue.grid(row=0, column=0, columnspan=2)
-        self.btnBack.grid(row=0, column=2, columnspan=2)
+        self.txtValue.grid(row=0, column=0, columnspan=3)
+        self.btnBack.grid(row=0, column=3)
 
         self.btnMod.grid(row=1, column=0)
         self.btnCE.grid(row=1, column=1)
@@ -79,10 +81,11 @@ class Application(tk.Frame):
     def set_widgets(self):
         self.varValue.set('0')
         self.txtValue['textvariable'] = self.varValue
+
         self.btnBack['text'] = '←'
 
-        self.btnC['text'] = 'C'
-        self.btnCE['text'] = 'CE'
+        self.btnC['text'] = 'Ｃ'
+        self.btnCE['text'] = 'ＣＥ'
 
         self.btnAdd['text'] = '＋'
         self.btnSub['text'] = '－'
@@ -90,6 +93,7 @@ class Application(tk.Frame):
         self.btnDiv['text'] = '÷'
         self.btnMod['text'] = '％'
         self.btnNeg['text'] = '±'
+        self.btnDot['text'] = '．'
         self.btnEq['text'] = '＝'
 
         self.btn0['text'] = '０'
@@ -103,10 +107,56 @@ class Application(tk.Frame):
         self.btn8['text'] = '８'
         self.btn9['text'] = '９'
 
+        self.btnBack['padx'] = 10
+        self.btnBack['pady'] = 10
+
+        self.btnC['padx'] = 10
+        self.btnC['pady'] = 10
+        self.btnCE['padx'] = 10
+        self.btnCE['pady'] = 10
+
+        self.btnAdd['padx'] = 10
+        self.btnAdd['pady'] = 10
+        self.btnSub['padx'] = 10
+        self.btnSub['pady'] = 10
+        self.btnMul['padx'] = 10
+        self.btnMul['pady'] = 10
+        self.btnDiv['padx'] = 10
+        self.btnDiv['pady'] = 10
+        self.btnMod['padx'] = 10
+        self.btnMod['pady'] = 10
+        self.btnNeg['padx'] = 10
+        self.btnNeg['pady'] = 10
+        self.btnDot['padx'] = 10
+        self.btnDot['pady'] = 10
+        self.btnEq['padx'] = 10
+        self.btnEq['pady'] = 10
+
+        self.btn0['padx'] = 10
+        self.btn0['pady'] = 10
+        self.btn1['padx'] = 10
+        self.btn1['pady'] = 10
+        self.btn2['padx'] = 10
+        self.btn2['pady'] = 10
+        self.btn3['padx'] = 10
+        self.btn3['pady'] = 10
+        self.btn4['padx'] = 10
+        self.btn4['pady'] = 10
+        self.btn5['padx'] = 10
+        self.btn5['pady'] = 10
+        self.btn6['padx'] = 10
+        self.btn6['pady'] = 10
+        self.btn7['padx'] = 10
+        self.btn7['pady'] = 10
+        self.btn8['padx'] = 10
+        self.btn8['pady'] = 10
+        self.btn9['padx'] = 10
+        self.btn9['pady'] = 10
+
         self.btnBack['command'] = self.backspace
 
         self.btnC['command'] = self.clear
-        self.btnCE['command'] = self.clear
+        self.btnCE['command'] = self.clear_entry
 
         self.btnAdd['command'] = self.add
         self.btnSub['command'] = self.sub
@@ -114,6 +164,7 @@ class Application(tk.Frame):
         self.btnDiv['command'] = self.div
         self.btnMod['command'] = self.mod
         self.btnNeg['command'] = self.neg
+        self.btnDot['command'] = self.dot
         self.btnEq['command'] = self.output
 
         self.btn0['command'] = partial(self.input, value=0)
@@ -129,15 +180,19 @@ class Application(tk.Frame):
 
     def input(self, value):
         v = self.varValue.get()
-        if v == '0':
+        if not self.is_input or v == '0':
             v = str(value)
         else:
             v += str(value)
         self.varValue.set(v)
+        self.is_input = True
 
     def output(self):
-        v = self.cal.eq()
-        self.varValue.set(str(v))
+        v = self.varValue.get()
+        self.cal.values = v
+        self.varValue.set(str(self.cal))
+        self.cal.reset()
+        self.is_input = False
 
     def backspace(self):
         value = self.varValue.get()
@@ -147,35 +202,56 @@ class Application(tk.Frame):
     def clear(self):
         self.cal.reset()
         self.varValue.set('0')
+        self.is_input = False
+    
+    def clear_entry(self):
+        self.varValue.set('0')
+        self.is_input = False
 
     def add(self):
         self.cal.values = self.varValue.get()
         self.cal.values = '+'
         self.varValue.set(str(self.cal))
+        self.is_input = False
 
     def sub(self):
         self.cal.values = self.varValue.get()
         self.cal.values = '-'
         self.varValue.set(str(self.cal))
+        self.is_input = False
 
     def mul(self):
         self.cal.values = self.varValue.get()
         self.cal.values = '*'
         self.varValue.set(str(self.cal))
+        self.is_input = False
 
     def div(self):
         self.cal.values = self.varValue.get()
         self.cal.values = '/'
         self.varValue.set(str(self.cal))
+        self.is_input = False
 
     def mod(self):
         self.cal.values = self.varValue.get()
         self.cal.values = '%'
         self.varValue.set(str(self.cal))
+        self.is_input = False
 
     def neg(self):
         v = self.varValue.get()
         if v.startswith('-'):
             self.varValue.set(v[1:])
-        else:
+        elif v != '0':
             self.varValue.set('-' + v)
+        self.is_input = False
+
+    def dot(self):
+        v = self.varValue.get()
+        if '.' not in v:
+            if v[0] == '0':
+                self.is_input = False
+                self.input('0.')
+            else:
+                self.input('.')
+
