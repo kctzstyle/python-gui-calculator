@@ -1,7 +1,3 @@
-"""
-TODO: calculate 및 app 미구현
-"""
-
 
 import tkinter as tk
 
