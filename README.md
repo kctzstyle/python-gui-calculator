@@ -1,2 +1,2 @@
-# python-gui-calculator
- GUI Calculator
+# Python GUI Calculator
+Python GUI Calculator with Tkinter Package
