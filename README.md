@@ -18,5 +18,5 @@ Python GUI Calculator with Tkinter Package
 > python main.py
 ```
 
-## Exmaple
+## Example
 ![Example](images/example.png)
