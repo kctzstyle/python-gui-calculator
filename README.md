@@ -8,6 +8,11 @@ Python GUI Calculator with Tkinter Package
 > venv/Scripts/activate
 ```
 
+## Setup and Build Application
+```console
+> python setup.py build
+```
+
 ## Run Application
 ```console
 > python main.py
